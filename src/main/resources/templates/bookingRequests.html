@@ -1,0 +1,455 @@
+<!doctype html>
+
+<html lang="en" class="dark" xmlns:th="http://www.thymeleaf.org">
+
+    <head>
+
+        <meta charset="UTF-8" />
+
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+        <title>User Dashboard | GoRido</title>
+
+        <script src="https://cdn.tailwindcss.com"></script>
+
+        <script>
+
+        tailwind.config = { darkMode: "class" };
+
+    </script>
+
+        <link
+            href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Outfit:wght@400;600;700;800&display=swap"
+            rel="stylesheet" />
+
+        <style>
+        h1,
+
+        h2,
+
+        h3,
+
+        h4,
+
+        .brand {
+
+          font-family: "Outfit", sans-serif;
+
+        }
+
+
+
+        .glass {
+
+          background: rgba(15, 23, 42, 0.72);
+
+          backdrop-filter: blur(18px);
+
+        }
+
+
+
+        .card-hover {
+
+          transition: 0.25s ease;
+
+        }
+
+
+
+        .card-hover:hover {
+
+          transform: tranzincY(-4px);
+
+        }
+
+    </style>
+
+    </head>
+
+    <body
+        class="min-h-screen bg-zinc-100 dark:bg-zinc-950 text-zinc-800 dark:text-white">
+
+        <div class="min-h-screen flex">
+
+            <!-- Sidebar -->
+
+            <div th:replace="~{sidebar :: sidebar}"></div>
+
+            <!-- Main Area -->
+
+            <main class="flex-1 lg:ml-72">
+
+                <!-- Top Bar -->
+
+                <header
+                    class="sticky top-0 z-40 bg-white/80 dark:bg-zinc-950/80 backdrop-blur border-b border-zinc-200 dark:border-zinc-800">
+
+                    <div
+                        class="px-5 sm:px-8 py-4 flex items-center justify-between">
+
+                        <div>
+
+                            <h2 class="text-xl sm:text-2xl font-bold">Booking Requests</h2>
+
+                            <p
+                                class="text-sm text-zinc-500 dark:text-zinc-400">
+                                Accept or manage new ride booking requests
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </header>
+
+                <section class="p-5 sm:p-8 space-y-8">
+
+                    <div class="flex items-center justify-between w-full">
+
+                        <!-- Breadcrumbs (LEFT) -->
+                        <nav
+                            class="text-xs text-zinc-400 dark:text-zinc-500 flex items-center flex-wrap">
+                            <a href="/userprofile"
+                                class="hover:text-yellow-400 transition">Home</a>
+
+                            <span class="mx-2">/</span>
+
+                            <span
+                                class="text-zinc-300 dark:text-zinc-200 font-medium">
+                                Booking Requests
+                            </span>
+                        </nav>
+
+                    </div>
+
+                    <!-- Recent Rides -->
+
+                    <div
+                        class="bg-white dark:bg-zinc-900 rounded-3xl p-6 shadow-lg border border-zinc-200 dark:border-zinc-950 space-y-6">
+
+                        <div class="bg-zinc-950 text-white p-6 space-y-6">
+
+                        <div th:if="${#lists.isEmpty(hires)}"
+                             class="relative bg-zinc-950 border border-zinc-700 rounded-3xl p-10 shadow-lg text-center max-w-md mx-auto">
+
+                            <!-- GLOW -->
+                            <div class="absolute -top-10 -right-10 w-40 h-40 bg-blue-500/10 blur-3xl rounded-full"></div>
+
+                            <!-- ICON (SVG) -->
+                            <div class="flex justify-center mb-5">
+                                <div class="w-16 h-16 flex items-center justify-center rounded-2xl bg-zinc-800 border border-zinc-700">
+
+                                    <!-- Inbox Icon -->
+                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                         class="w-8 h-8 text-zinc-400"
+                                         fill="none"
+                                         viewBox="0 0 24 24"
+                                         stroke="currentColor"
+                                         stroke-width="1.5">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                              d="M20.25 12l-2.122-6.366A2.25 2.25 0 0016.006 4.5H7.994a2.25 2.25 0 00-2.122 1.134L3.75 12m16.5 0v5.25A2.25 2.25 0 0118 19.5H6a2.25 2.25 0 01-2.25-2.25V12m16.5 0h-3.87a1.5 1.5 0 01-1.32-.78l-.99-1.74a1.5 1.5 0 00-1.32-.78h-1.5a1.5 1.5 0 00-1.32.78l-.99 1.74a1.5 1.5 0 01-1.32.78H3.75"/>
+                                    </svg>
+
+                                </div>
+                            </div>
+
+                            <!-- TITLE -->
+                            <p class="text-white text-lg font-semibold">
+                                No Booking Requests
+                            </p>
+
+                            <!-- DESCRIPTION -->
+                            <p class="text-zinc-400 text-sm mt-2">
+                                New requests will appear here once customers start booking.
+                            </p>
+
+                        </div>
+
+                            <div th:each="h : ${hires}"
+                                 class="relative overflow-hidden rounded-[32px]
+     border border-white/10 bg-zinc-900
+     shadow-[0_20px_80px_rgba(0,0,0,0.45)]">
+
+                                <!-- CONTENT -->
+                                <div class="relative p-7">
+
+                                    <div class="absolute top-0 right-0 w-72 h-72 bg-yellow-500/5 blur-3xl rounded-full"></div>
+
+                                    <div class="relative flex flex-col sm:flex-row sm:items-start sm:justify-between gap-6">
+
+                                        <div class="flex items-center gap-4">
+
+                                            <div class="w-14 h-14 rounded-2xl
+                    bg-yellow-400/10
+                    border border-yellow-400/10
+                    flex items-center justify-center">
+
+                                                <svg class="w-7 h-7 text-yellow-400"
+                                                     fill="none"
+                                                     stroke="currentColor"
+                                                     viewBox="0 0 24 24">
+
+                                                    <path stroke-linecap="round"
+                                                          stroke-linejoin="round"
+                                                          stroke-width="2"
+                                                          d="M8 7V5a4 4 0 118 0v2m-9 4h10m-11 0h12l-1 8H7l-1-8z"/>
+                                                </svg>
+
+                                            </div>
+
+                                            <!-- TEXT -->
+                                            <div>
+
+                                                <div class="flex items-center gap-3 flex-wrap">
+
+                                                    <h2 class="text-xl sm:text-2xl font-bold tracking-normal text-white">
+                                                        Hire #<span th:text="${h.id}"></span>
+                                                    </h2>
+
+                                                    <div class="px-3 py-1 rounded-full
+                            border border-emerald-500/15
+                            bg-emerald-500/10">
+
+                                                        <p class="text-[10px] uppercase tracking-normal
+                                font-semibold text-emerald-400">
+                                                            Pending
+                                                        </p>
+
+                                                    </div>
+
+                                                </div>
+
+                                                <p class="mt-2 text-sm text-zinc-500"
+                                                   th:text="${#dates.format(h.requested_at, 'dd MMM yyyy • hh:mm a')}">
+                                                </p>
+
+                                            </div>
+
+                                        </div>
+
+                                        <!-- PRICE -->
+                                        <div class="text-left sm:text-right">
+
+                                            <p class="text-[11px] uppercase tracking-normal text-zinc-500">
+                                                Total Fare
+                                            </p>
+
+                                            <h1 class="mt-2 text-2xl sm:text-4xl font-bold
+                    bg-gradient-to-r from-yellow-300 via-amber-400 to-orange-500
+                    bg-clip-text text-transparent leading-none">
+
+                                                LKR <span th:text="${h.total_fare}"></span>
+
+                                            </h1>
+
+                                        </div>
+
+                                    </div>
+
+                                    <!-- ROUTE SECTION -->
+                                    <div class="mt-8 rounded-[28px]
+            border border-white/5
+            bg-white/[0.03]
+            p-6">
+
+                                        <div class="flex flex-col sm:flex-row gap-5">
+
+                                            <!-- TIMELINE -->
+                                            <div class="hidden lg:flex flex-col items-center">
+
+                                                <!-- PICKUP DOT -->
+                                                <div class="relative">
+
+                                                    <div class="absolute inset-0 rounded-full bg-green-500 blur-md opacity-30"></div>
+
+                                                    <div class="relative w-5 h-5 rounded-full bg-green-500
+                            border-4 border-[#0b0b0f]"></div>
+
+                                                </div>
+
+                                                <!-- LINE -->
+                                                <div class="w-[2px] h-20 bg-gradient-to-b from-green-500 via-zinc-700 to-red-500"></div>
+
+                                                <!-- DROP DOT -->
+                                                <div class="relative">
+
+                                                    <div class="absolute inset-0 rounded-full bg-red-500 blur-md opacity-30"></div>
+
+                                                    <div class="relative w-5 h-5 rounded-full bg-red-500
+                            border-4 border-[#0b0b0f]"></div>
+
+                                                </div>
+
+                                            </div>
+
+                                            <!-- LOCATIONS -->
+                                            <div class="flex-1 flex flex-col justify-between">
+
+                                                <!-- PICKUP -->
+                                                <div>
+
+                                                    <p class="text-[11px] uppercase tracking-normal
+                            text-zinc-500 font-semibold">
+                                                        Pickup Location
+                                                    </p>
+
+                                                    <p class="mt-2 text-base font-semibold text-white leading-relaxed break-words"
+                                                       th:text="${h.pickup_location}">
+                                                    </p>
+
+                                                </div>
+
+                                                <!-- DIVIDER -->
+                                                <div class="my-5 border-t border-dashed border-zinc-800"></div>
+
+                                                <!-- DROP -->
+                                                <div>
+
+                                                    <p class="text-[11px] uppercase tracking-normal
+                            text-zinc-500 font-semibold">
+                                                        Drop-off Location
+                                                    </p>
+
+                                                    <p class="mt-2 text-base font-semibold text-white leading-relaxed break-words"
+                                                       th:text="${h.drop_location}">
+                                                    </p>
+
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                    <!-- STATS -->
+                                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-7">
+
+                                        <!-- START -->
+                                        <div class="rounded-2xl border border-white/5 bg-white/[0.03] p-4">
+
+                                            <p class="text-[10px] uppercase tracking-normal text-zinc-500 font-semibold">
+                                                Start
+                                            </p>
+
+                                            <p class="mt-3 text-sm font-semibold text-white leading-relaxed"
+                                               th:text="${#temporals.format(h.starting_at, 'dd MMM yyyy | hh:mm a')}">
+                                            </p>
+
+                                        </div>
+
+                                        <!-- DURATION -->
+                                        <div class="rounded-2xl border border-white/5 bg-white/[0.03] p-4">
+
+                                            <p class="text-[10px] uppercase tracking-normal text-zinc-500 font-semibold">
+                                                Duration
+                                            </p>
+
+                                            <div class="mt-3 text-sm font-semibold text-white">
+
+                    <span th:if="${h.duration < 60}"
+                          th:text="${h.duration + ' Minutes'}"></span>
+
+                                                <span th:if="${h.duration >= 60 and h.duration < 1440}"
+                                                      th:text="${(h.duration / 60).intValue()} + ' Hours'"></span>
+
+                                                <span th:if="${h.duration >= 1440}"
+                                                      th:text="${(h.duration / 1440).intValue()} + ' Days ' + (h.duration % 1440) + ' Minutes'"></span>
+
+                                            </div>
+
+                                        </div>
+
+                                        <!-- DISTANCE -->
+                                        <div class="rounded-2xl border border-white/5 bg-white/[0.03] p-4 text-center">
+
+                                            <p class="text-[10px] uppercase tracking-normal text-zinc-500 font-semibold">
+                                                Distance
+                                            </p>
+
+                                            <h3 class="mt-2 text-2xl font-bold text-white">
+                                                <span th:text="${h.distance}"></span>
+                                                <span class="text-sm font-semibold text-zinc-400">KM</span>
+                                            </h3>
+
+                                        </div>
+
+                                        <!-- VEHICLE -->
+                                        <div class="rounded-2xl border border-white/5 bg-white/[0.03] p-4 text-center">
+
+                                            <p class="text-[10px] uppercase tracking-normal text-zinc-500 font-semibold">
+                                                Vehicle
+                                            </p>
+
+                                            <h3 class="mt-2 text-lg font-bold text-white"
+                                                th:text="${h.vehicleType.name}">
+                                            </h3>
+
+                                        </div>
+
+                                    </div>
+
+                                    <!-- FOOTER -->
+                                    <div class="mt-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
+
+                                        <!-- CUSTOMER -->
+                                        <div class="flex items-center gap-4">
+
+                                            <img
+                                                    th:src="${h.user.gender_id.id == 1} ?
+                    'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80'
+                    :
+                    'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=200&q=80'"
+                                                    class="w-14 h-14 rounded-2xl object-cover border border-white/10"
+                                                    alt="Customer">
+
+                                            <div>
+
+                                                <p class="text-[11px] uppercase tracking-normal text-zinc-500 font-semibold">
+                                                    Customer
+                                                </p>
+
+                                                <p class="mt-1 text-lg font-bold text-white">
+
+                                                    <span class="capitalize" th:text="${h.user.first_name}"></span>
+                                                    <span class="capitalize" th:text="${h.user.last_name}"></span>
+
+                                                </p>
+
+                                            </div>
+
+                                        </div>
+
+                                        <!-- BUTTON -->
+                                        <button th:attr="data-id=${h.id}"
+                                                onclick="acceptBooking(this)"
+                                                class="w-full sm:w-auto px-8 py-4 rounded-2xl
+                    bg-yellow-400
+                    text-black font-semibold
+                    shadow-[0_10px_30px_rgba(250,204,21,0.18)]">
+
+                                            Accept Booking
+
+                                        </button>
+
+                                    </div>
+
+                                </div>
+                            </div>
+
+                    </div>
+
+                    </div>
+
+                </section>
+
+            </main>
+
+        </div>
+        <script src="/Js/userprofile.js"></script>
+        <script src="/Js/bookingRequests.js"></script>
+        <script src="/Js/default.js"></script>
+    </body>
+
+</html>

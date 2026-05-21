@@ -1,0 +1,271 @@
+<!doctype html>
+
+<html lang="en" class="dark" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Route | GoRido</title>
+
+    <link
+            href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Outfit:wght@400;600;700;800&display=swap"
+            rel="stylesheet" />
+
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet"
+          href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+
+
+
+        tailwind.config = { darkMode: "class" };
+
+    </script>
+
+    <link
+            href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Outfit:wght@400;600;700;800&display=swap"
+            rel="stylesheet" />
+
+    <style>
+        h1,
+
+        h2,
+
+        h3,
+
+        h4,
+
+        .brand {
+
+          font-family: "Outfit", sans-serif;
+
+        }
+
+
+
+        .glass {
+
+          background: rgba(15, 23, 42, 0.72);
+
+          backdrop-filter: blur(18px);
+
+        }
+
+
+
+        .card-hover {
+
+          transition: 0.25s ease;
+
+        }
+
+
+
+        .card-hover:hover {
+
+          transform: tranzincY(-4px);
+
+        }
+
+    </style>
+
+</head>
+
+<body
+        class="min-h-screen bg-zinc-100 dark:bg-zinc-950 text-zinc-800 dark:text-white">
+
+<div class="min-h-screen flex">
+
+    <!-- Sidebar -->
+
+    <div th:replace="~{sidebar :: sidebar}"></div>
+
+    <!-- Main Area -->
+
+    <main class="flex-1 lg:ml-72">
+
+        <!-- Top Bar -->
+
+        <header
+                class="sticky top-0 z-40 bg-white/80 dark:bg-zinc-950/80 backdrop-blur border-b border-zinc-200 dark:border-zinc-800">
+
+            <div
+                    class="px-5 sm:px-8 py-4 flex items-center justify-between">
+
+                <div>
+
+                    <h2 class="text-xl sm:text-2xl font-bold">Route</h2>
+
+                    <p
+                            class="text-sm text-zinc-500 dark:text-zinc-400">
+                        Navigate you to destination
+                    </p>
+
+                </div>
+
+            </div>
+
+        </header>
+
+        <section class="p-5 sm:p-8 space-y-8">
+
+            <div
+                    class="flex items-center justify-between w-full flex-wrap gap-4">
+
+                <!-- Breadcrumbs (LEFT) -->
+                <nav
+                        class="text-xs text-zinc-400 dark:text-zinc-500 flex items-center flex-wrap">
+                    <a href="/userprofile"
+                       class="hover:text-yellow-400 transition">
+                        Home
+                    </a>
+
+                    <span class="mx-2">/</span>
+
+                    <span
+                            class="text-zinc-300 dark:text-zinc-200 font-medium">
+                                Route
+                            </span>
+                </nav>
+
+            </div>
+
+            <!-- Recent Rides -->
+
+            <div
+                    class="bg-white dark:bg-zinc-900 rounded-3xl p-6 shadow-lg border border-zinc-200 dark:border-zinc-950 space-y-6">
+
+                <div class="space-y-4">
+
+                    <div
+                            class="bg-white dark:bg-zinc-900 rounded-3xl p-6 shadow-lg border border-zinc-200 dark:border-zinc-800 space-y-5">
+
+                        <!-- Header -->
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h2
+                                        class="text-lg font-semibold text-zinc-800 dark:text-zinc-100">
+                                    Map Overview
+                                </h2>
+                                <p
+                                        class="text-sm text-zinc-500 dark:text-zinc-400">
+                                    Live location and route
+                                    visualization
+                                </p>
+                            </div>
+
+                            <!-- optional status badge -->
+                            <div
+                                    class="text-xs px-3 py-1 rounded-full bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300">
+                                Live
+                            </div>
+                        </div>
+
+                        <!-- Map Container -->
+                        <div
+                                class="rounded-2xl overflow-hidden border border-zinc-200 dark:border-zinc-800">
+                            <div id="map" class="w-full"
+                                 style="height: 500px;"></div>
+                        </div>
+
+                        <!-- Footer Info (optional placeholders for route info) -->
+                        <div
+                                class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+
+                            <div
+                                    class="p-4 rounded-xl bg-zinc-50 dark:bg-zinc-800">
+                                <p class="text-zinc-500 dark:text-zinc-400">Pickup</p>
+                                <p th:text="${hire.pickup_location}" id="map-pickup" class="font-medium text-zinc-800 dark:text-zinc-100">
+                                </p>
+                            </div>
+
+                            <div
+                                    class="p-4 rounded-xl bg-zinc-50 dark:bg-zinc-800">
+                                <p class="text-zinc-500 dark:text-zinc-400">Destination</p>
+                                <p th:text="${hire.drop_location}" id="map-destination" class="font-medium text-zinc-800 dark:text-zinc-100">
+                                    Colombo Fort
+                                </p>
+                            </div>
+
+                            <div
+                                    class="p-4 rounded-xl bg-zinc-50 dark:bg-zinc-800">
+                                <p
+                                        class="text-zinc-500 dark:text-zinc-400">Status</p>
+                                <p id="map-status"
+                                   class="font-medium text-amber-600">Waiting
+                                    for route</p>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+                <!-- Hidden UI container required by map.js -->
+                <div id="map-ui-hidden" style="display:none;">
+
+                    <input type="hidden" id="pickup-input" />
+                    <input type="hidden" id="dest-input" />
+
+                    <div id="pickup-suggestions"></div>
+                    <div id="dest-suggestions"></div>
+
+                    <span id="est-distance"></span>
+                    <span id="est-duration"></span>
+                    <span id="est-base"></span>
+                    <span id="est-total"></span>
+
+                    <div id="price-card"></div>
+                    <span id="modal-fare"></span>
+
+                    <span id="summary-route"></span>
+                    <span id="summary-duration"></span>
+                    <span id="summary-estimate"></span>
+
+                    <div id="rental-status-badge"></div>
+
+                    <div id="duration-hours-panel"></div>
+                    <div id="duration-days-panel"></div>
+
+                    <button id="duration-hours-btn"></button>
+                    <button id="duration-days-btn"></button>
+
+                    <div id="hours-summary">
+                        <span id="hours-summary-text"></span>
+                    </div>
+
+                    <span id="days-count"></span>
+                    <span id="days-range-text"></span>
+
+                    <div id="poi-loading"></div>
+
+                    <div id="mob-sidebar"></div>
+                    <div id="mob-overlay"></div>
+
+                </div>
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+<script th:inline="javascript">
+    window.onload = function () {
+        loadRoute(
+            [[${hire.pickup_location}]],
+            [[${hire.drop_location}]]
+        );
+    };
+</script>
+<script src="/Js/map.js"></script>
+</body>
+
+</html>

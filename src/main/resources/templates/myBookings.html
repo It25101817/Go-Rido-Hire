@@ -1,0 +1,1273 @@
+<!doctype html>
+
+<html lang="en" class="dark" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>My Bookings | GoRido</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+
+        tailwind.config = { darkMode: "class" };
+
+    </script>
+
+    <link
+            href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Outfit:wght@400;600;700;800&display=swap"
+            rel="stylesheet" />
+
+    <style>
+        h1,
+
+        h2,
+
+        h3,
+
+        h4,
+
+        .brand {
+
+          font-family: "Outfit", sans-serif;
+
+        }
+
+
+
+        .glass {
+
+          background: rgba(15, 23, 42, 0.72);
+
+          backdrop-filter: blur(18px);
+
+        }
+
+
+
+        .card-hover {
+
+          transition: 0.25s ease;
+
+        }
+
+
+
+        .card-hover:hover {
+
+          transform: tranzincY(-4px);
+
+        }
+
+    </style>
+
+</head>
+
+<body
+        class="min-h-screen bg-zinc-100 dark:bg-zinc-950 text-zinc-800 dark:text-white">
+
+<div class="min-h-screen flex">
+
+    <!-- Sidebar -->
+
+    <div th:replace="~{sidebar :: sidebar}"></div>
+
+    <!-- Main Area -->
+
+    <main class="flex-1 lg:ml-72">
+
+        <!-- Top Bar -->
+
+        <header
+                class="sticky top-0 z-40 bg-white/80 dark:bg-zinc-950/80 backdrop-blur border-b border-zinc-200 dark:border-zinc-800">
+
+            <div
+                    class="px-5 sm:px-8 py-4 flex items-center justify-between">
+
+                <div>
+
+                    <h2 class="text-xl sm:text-2xl font-bold">My
+                        Booking</h2>
+
+                    <p
+                            class="text-sm text-zinc-500 dark:text-zinc-400">
+                        Manage your upcoming events
+                    </p>
+
+                </div>
+
+            </div>
+
+        </header>
+
+        <section class="p-5 sm:p-8 space-y-8">
+
+            <div class="flex items-center justify-between w-full">
+
+                <!-- Breadcrumbs (LEFT) -->
+                <nav
+                        class="text-xs text-zinc-400 dark:text-zinc-500 flex items-center flex-wrap">
+                    <a href="/userprofile"
+                       class="hover:text-yellow-400 transition">Home</a>
+
+                    <span class="mx-2">/</span>
+
+                    <span
+                            class="text-zinc-300 dark:text-zinc-200 font-medium">
+                                My Bookings
+                            </span>
+                </nav>
+
+            </div>
+
+            <!-- Recent Rides -->
+
+            <div class="bg-white dark:bg-zinc-900 rounded-3xl p-6 shadow-lg border border-zinc-200 dark:border-zinc-950 space-y-6">
+
+                <div class="bg-zinc-950 text-white p-6">
+
+                    <div onclick="window.location.href='/bookHire'"
+                         class="vehicle-card bg-white dark:bg-zinc-900
+            rounded-2xl overflow-hidden
+            border-2 border-dashed border-yellow-400/50
+            hover:border-yellow-500
+            hover:bg-yellow-50 dark:hover:bg-zinc-800
+            transition cursor-pointer
+            flex flex-col items-center justify-center py-10">
+
+                        <div
+                                class="w-14 h-14 rounded-xl
+               bg-yellow-100 dark:bg-yellow-900/30
+               flex items-center justify-center mb-3">
+
+                            <svg class="w-6 h-6 text-yellow-500"
+                                 fill="none"
+                                 stroke="currentColor"
+                                 viewBox="0 0 24 24">
+                                <path stroke-linecap="round"
+                                      stroke-linejoin="round"
+                                      stroke-width="2"
+                                      d="M12 4v16m8-8H4" />
+                            </svg>
+                        </div>
+
+                        <h3
+                                class="text-sm font-semibold text-zinc-800 dark:text-white">
+                            New Ride
+                        </h3>
+
+                        <p
+                                class="text-xs text-zinc-500 dark:text-zinc-400 mt-1">
+                            Click to create a new booking
+                        </p>
+
+                    </div>
+
+                    <div class="flex items-center gap-3 mb-8 bg-zinc-900/80 p-2 rounded-full border border-zinc-800 w-fit mt-10">
+
+                        <!-- TODAY -->
+                        <button
+                                onclick="showBookingTab('today-bookings', this)"
+                                class="booking-tab-btn
+           bg-white text-zinc-950 shadow-lg
+           flex items-center gap-2
+           px-6 py-3 rounded-full
+           text-sm font-semibold
+           transition-all duration-200">
+
+                            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+
+                            <span>Today</span>
+
+                        </button>
+
+                        <!-- UPCOMING -->
+                        <button
+                                onclick="showBookingTab('upcoming-bookings', this)"
+                                class="booking-tab-btn
+           text-zinc-400
+           flex items-center gap-2
+           px-6 py-3 rounded-full
+           text-sm font-semibold
+           transition-all duration-200">
+
+                            <span class="w-2.5 h-2.5 rounded-full bg-yellow-400"></span>
+
+                            <span>Upcoming</span>
+
+                        </button>
+
+                        <button
+                                onclick="showBookingTab('expired-bookings', this)"
+                                class="booking-tab-btn
+           text-zinc-400
+           flex items-center gap-2
+           px-6 py-3 rounded-full
+           text-sm font-semibold
+           transition-all duration-200">
+
+                            <span class="w-2.5 h-2.5 rounded-full bg-red-500"></span>
+
+                            <span>Expired</span>
+
+                        </button>
+
+                    </div>
+
+                    <div id="today-bookings" class="booking-section mb-10 mt-5">
+
+                        <div
+                                class="flex items-center justify-between mb-5">
+
+                            <div>
+
+                                <h2 class="text-2xl font-bold mt-1">
+                                    Schedule Today
+                                </h2>
+                            </div>
+
+                        </div>
+                        <div th:if="${#lists.isEmpty(todayHires)}"
+                             class="relative bg-zinc-950 border border-zinc-700 rounded-3xl p-10 shadow-lg text-center max-w-md mx-auto">
+
+                            <!-- GLOW -->
+                            <div
+                                    class="absolute -top-10 -right-10 w-40 h-40 bg-blue-500/10 blur-3xl rounded-full"></div>
+
+                            <!-- ICON -->
+                            <div class="flex justify-center mb-5">
+                                <div
+                                        class="w-16 h-16 flex items-center justify-center rounded-2xl bg-zinc-800 border border-zinc-700">
+
+                                    <!-- Clock / Calendar Icon -->
+                                    <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            class="w-8 h-8 text-zinc-400"
+                                            fill="none"
+                                            viewBox="0 0 24 24"
+                                            stroke="currentColor"
+                                            stroke-width="1.5">
+
+                                        <path stroke-linecap="round"
+                                              stroke-linejoin="round"
+                                              d="M8 7V3m8 4V3m-9 8h10m2 0v9a2 2 0 01-2 2H7a2 2 0 01-2-2v-9m14 0H5" />
+
+                                    </svg>
+
+                                </div>
+                            </div>
+
+                            <!-- TITLE -->
+                            <p class="text-white text-lg font-semibold">
+                                No Today Hires
+                            </p>
+
+                            <!-- DESCRIPTION -->
+                            <p class="text-zinc-400 text-sm mt-2">
+                                There are no bookings scheduled for
+                                today yet.
+                            </p>
+
+                        </div>
+
+                        <div
+                                class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+
+                            <div th:each="h : ${todayHires}"
+                                 class="bg-zinc-900 border border-zinc-800 rounded-3xl overflow-hidden shadow-xl">
+
+                                <!-- HEADER -->
+                                <div
+                                        class="p-5 flex items-start justify-between">
+
+                                    <!-- STATUS + TIME -->
+                                    <div class="flex flex-col gap-1">
+
+                                                <span
+                                                        th:text="${h.hireStatus.name}"
+                                                        class="px-3 py-1 rounded-full text-[10px]
+                         bg-yellow-500/10 text-yellow-400
+                         border border-yellow-500/20 uppercase w-fit">
+                                                </span>
+
+                                        <p
+                                                class="text-[11px] text-zinc-500"
+                                                th:text="${#dates.format(h.requested_at, 'dd MMM, hh:mm a')}">
+                                        </p>
+
+                                    </div>
+
+                                    <!-- RIDE ID -->
+                                    <div class="text-right">
+                                        <p
+                                                class="text-[10px] text-zinc-500">Ride
+                                            ID</p>
+                                        <p
+                                                class="text-sm font-semibold text-zinc-300">
+                                            #<span
+                                                th:text="${h.id}"></span>
+                                        </p>
+                                    </div>
+
+                                </div>
+
+                                <!-- USER / DRIVER SECTION -->
+                                <div
+                                        class="p-5 flex items-center gap-3">
+
+                                    <!-- AVATAR -->
+                                    <div
+                                            class="w-12 h-12 rounded-2xl bg-zinc-800 flex items-center justify-center font-semibold text-sm">
+
+                                                <span
+                                                        th:if="${h.hireStatus.id == 1 || h.hireStatus.id == 5}"
+                                                        class="text-yellow-400">?</span>
+
+                                        <span
+                                                th:if="${h.hireStatus.id != 1 && h.hireStatus.id != 5}">
+                                                    <span
+                                                            th:text="${h.driver.userId.first_name.substring(0,1)}"></span>
+                                                    <span
+                                                            th:text="${h.driver.userId.last_name.substring(0,1)}"></span>
+                                                </span>
+
+                                    </div>
+
+                                    <!-- USER INFO -->
+                                    <div class="min-w-0">
+
+                                        <p
+                                                class="font-semibold text-zinc-200 text-sm truncate">
+
+                                                    <span
+                                                            th:if="${h.hireStatus.id == 1 || h.hireStatus.id == 5}"
+                                                            class="text-yellow-400">
+                                                        Waiting for Driver
+                                                    </span>
+
+                                            <span
+                                                    th:if="${h.hireStatus.id != 1 && h.hireStatus.id != 5}">
+                                                        <span
+                                                                th:text="${h.driver.userId.first_name}"></span>
+                                                        <span
+                                                                th:text="${h.driver.userId.last_name}"></span>
+                                                    </span>
+
+                                        </p>
+
+                                        <p
+                                                class="text-xs text-zinc-500">
+                                            Driver Assigned
+                                        </p>
+
+                                    </div>
+
+                                </div>
+
+                                <!-- ROUTE (Job-card style) -->
+                                <div class="px-5 flex gap-4">
+
+                                    <div
+                                            class="flex flex-col items-center">
+                                        <div
+                                                class="w-3 h-3 rounded-full bg-green-500"></div>
+                                        <div
+                                                class="w-[2px] h-14 bg-zinc-700"></div>
+                                        <div
+                                                class="w-3 h-3 rounded-full bg-red-500"></div>
+                                    </div>
+
+                                    <div class="flex-1">
+
+                                        <div class="mb-4">
+                                            <p
+                                                    class="text-[10px] uppercase text-zinc-500">Pickup</p>
+                                            <p
+                                                    class="text-sm text-zinc-200 mt-1"
+                                                    th:text="${h.pickup_location}"></p>
+                                        </div>
+
+                                        <div>
+                                            <p
+                                                    class="text-[10px] uppercase text-zinc-500">Destination</p>
+                                            <p
+                                                    class="text-sm text-zinc-200 font-medium mt-1"
+                                                    th:text="${h.drop_location}"></p>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                                <!-- GRID INFO (same as job card pattern) -->
+                                <div class="p-5 grid grid-cols-2 gap-3">
+
+                                    <div
+                                            class="bg-zinc-950 border border-zinc-800 rounded-2xl p-3">
+
+                                        <p
+                                                class="text-[10px] text-zinc-500 uppercase">
+                                            Date
+                                        </p>
+
+                                        <p
+                                                th:text="${#temporals.format(h.starting_at, 'dd MMM yyyy')}"
+                                                class="text-sm font-semibold mt-1">
+                                        </p>
+
+                                    </div>
+
+                                    <div
+                                            class="bg-zinc-950 border border-zinc-800 rounded-2xl p-3">
+
+                                        <p
+                                                class="text-[10px] text-zinc-500 uppercase">
+                                            Time
+                                        </p>
+
+                                        <p
+                                                th:text="${#temporals.format(h.starting_at, 'hh:mm a')}"
+                                                class="text-sm font-semibold mt-1">
+                                        </p>
+
+                                    </div>
+
+                                    <div
+                                            class="bg-zinc-950 border border-zinc-800 rounded-2xl p-3">
+                                        <p
+                                                class="text-[10px] text-zinc-500 uppercase">Distance</p>
+                                        <p
+                                                class="text-sm font-semibold mt-1 text-zinc-200">
+                                                    <span
+                                                            th:text="${h.distance}"></span>
+                                            km
+                                        </p>
+                                    </div>
+
+                                    <div
+                                            class="bg-zinc-950 border border-zinc-800 rounded-2xl p-3">
+                                        <p
+                                                class="text-[10px] text-zinc-500 uppercase">Fare</p>
+                                        <p
+                                                class="text-sm font-semibold mt-1 text-emerald-400">
+                                            LKR <span
+                                                th:text="${h.total_fare}"></span>
+                                        </p>
+                                    </div>
+
+                                    <div
+                                            class="bg-zinc-950 border border-zinc-800 rounded-2xl p-3">
+                                        <p
+                                                class="text-[10px] text-zinc-500 uppercase">Vehicle</p>
+                                        <p
+                                                class="text-sm font-semibold mt-1 text-zinc-200"
+                                                th:text="${h.vehicleType.name}">
+                                        </p>
+                                    </div>
+
+                                    <div
+                                            class="bg-zinc-950 border border-zinc-800 rounded-2xl p-3">
+
+                                        <p
+                                                class="text-[10px] text-zinc-500 uppercase">Payment</p>
+
+                                        <p
+                                                class="text-sm font-semibold mt-1 text-zinc-200"
+                                                th:text="${h.hireStatus.id == 5 ? 'Not Paid Yet' : h.payment.paymentType.name}">
+                                        </p>
+
+                                    </div>
+
+                                </div>
+
+                                <!-- FOOTER ACTION -->
+                                <div class="p-5">
+
+                                    <div th:if="${h.hireStatus.id != 5
+             and h.payment != null
+             and h.payment.paymentType.id == 1}"
+                                         class="p-4 rounded-2xl border border-emerald-500/20 bg-emerald-500/5 flex items-center gap-4">
+
+                                        <!-- Icon circle (clean, no emoji) -->
+                                        <div
+                                                class="w-10 h-10 rounded-full bg-emerald-500/10 flex items-center justify-center">
+                                            <svg
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    class="w-5 h-5 text-emerald-400"
+                                                    viewBox="0 0 24 24"
+                                                    fill="none"
+                                                    stroke="currentColor"
+                                                    stroke-width="2">
+                                                <path d="M12 1v22" />
+                                                <path
+                                                        d="M17 5H9.5a3.5 3.5 0 0 0 0 7H14a3.5 3.5 0 0 1 0 7H6" />
+                                            </svg>
+                                        </div>
+
+                                        <!-- Text content -->
+                                        <div class="flex flex-col">
+                                            <p
+                                                    class="text-sm font-semibold text-emerald-400 tracking-wide">
+                                                Cash Payment Confirmed
+                                            </p>
+                                            <p
+                                                    class="text-xs text-emerald-300/80">
+                                                Payment will be
+                                                collected at pickup
+                                            </p>
+                                        </div>
+
+                                    </div>
+
+                                    <!-- INVOICE -->
+                                    <button
+                                            th:if="${h.hireStatus.id != 5 and h.payment != null and h.payment.paymentType.id == 2}"
+                                            th:onclick="'window.location.href=\'/invoice?hireId=' + ${h.id} + '\''"
+                                            class="w-full mt-2 py-3 rounded-2xl
+               bg-zinc-800 hover:bg-zinc-700
+               border border-zinc-700
+               text-zinc-200 font-semibold text-sm">
+
+                                        View Invoice
+
+                                    </button>
+
+                                    <button
+                                            th:if="${h.hireStatus.id == 5}"
+                                            type="button"
+                                            th:onclick="'payHire(' + ${h.id} + ')'"
+                                            class="w-full mt-2 py-3 rounded-2xl
+               bg-yellow-400 hover:bg-yellow-500
+               text-zinc-950 font-bold text-sm
+               shadow-md hover:shadow-lg hover:shadow-yellow-400/30
+               transition-all duration-200 active:scale-[0.98]">
+
+                                        Proceed to Pay
+                                    </button>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div id="upcoming-bookings" class="booking-section mb-10 hidden">
+
+                            <div
+                                    class="flex items-center justify-between mb-5">
+
+                                <div>
+
+                                    <h2 class="text-2xl font-bold mt-1">
+                                        Upcoming events
+                                    </h2>
+                                </div>
+
+                            </div><div
+                                th:if="${#lists.isEmpty(upcomingHires)}"
+                                class="relative bg-zinc-950 border border-zinc-700 rounded-3xl p-10 shadow-lg text-center max-w-md mx-auto">
+
+                            <!-- GLOW -->
+                            <div
+                                    class="absolute -top-10 -right-10 w-40 h-40 bg-blue-500/10 blur-3xl rounded-full"></div>
+
+                            <!-- ICON -->
+                            <div class="flex justify-center mb-5">
+                                <div
+                                        class="w-16 h-16 flex items-center justify-center rounded-2xl bg-zinc-800 border border-zinc-700">
+
+                                    <!-- Clock / Calendar Icon -->
+                                    <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            class="w-8 h-8 text-zinc-400"
+                                            fill="none"
+                                            viewBox="0 0 24 24"
+                                            stroke="currentColor"
+                                            stroke-width="1.5">
+
+                                        <path stroke-linecap="round"
+                                              stroke-linejoin="round"
+                                              d="M8 7V3m8 4V3m-9 8h10m2 0v9a2 2 0 01-2 2H7a2 2 0 01-2-2v-9m14 0H5" />
+
+                                    </svg>
+
+                                </div>
+                            </div>
+
+                            <!-- TITLE -->
+                            <p
+                                    class="text-white text-lg font-semibold">
+                                No Upcoming Hires
+                            </p>
+
+                            <!-- DESCRIPTION -->
+                            <p class="text-zinc-400 text-sm mt-2">
+                                There are no bookings scheduled for
+                                today yet.
+                            </p>
+
+                        </div>
+
+                            <div
+                                    class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+
+                                <div
+                                        th:each="upHires : ${upcomingHires}"
+                                        class="bg-zinc-900 border border-zinc-800 rounded-3xl overflow-hidden shadow-xl">
+
+                                    <!-- HEADER -->
+                                    <div
+                                            class="p-5 flex items-start justify-between">
+
+                                        <!-- STATUS + TIME -->
+                                        <div
+                                                class="flex flex-col gap-1">
+
+                                                    <span
+                                                            th:text="${upHires.hireStatus.name}"
+                                                            class="px-3 py-1 rounded-full text-[10px]
+                         bg-yellow-500/10 text-yellow-400
+                         border border-yellow-500/20 uppercase w-fit">
+                                                    </span>
+
+                                            <p
+                                                    class="text-[11px] text-zinc-500"
+                                                    th:text="${#dates.format(upHires.requested_at, 'dd MMM, hh:mm a')}">
+                                            </p>
+
+                                        </div>
+
+                                        <!-- RIDE ID -->
+                                        <div class="text-right">
+                                            <p
+                                                    class="text-[10px] text-zinc-500">Ride
+                                                ID</p>
+                                            <p
+                                                    class="text-sm font-semibold text-zinc-300">
+                                                #<span
+                                                    th:text="${upHires.id}"></span>
+                                            </p>
+                                        </div>
+
+                                    </div>
+
+                                    <!-- USER / DRIVER SECTION -->
+                                    <div
+                                            class="p-5 flex items-center gap-3">
+
+                                        <!-- AVATAR -->
+                                        <div
+                                                class="w-12 h-12 rounded-2xl bg-zinc-800 flex items-center justify-center font-semibold text-sm">
+
+                                                    <span
+                                                            th:if="${upHires.hireStatus.id == 1 || upHires.hireStatus.id == 5}"
+                                                            class="text-yellow-400">?</span>
+
+                                            <span
+                                                    th:if="${upHires.hireStatus.id != 1 && upHires.hireStatus.id != 5}">
+                                                        <span
+                                                                th:text="${upHires.driver.userId.first_name.substring(0,1)}"></span>
+                                                        <span
+                                                                th:text="${upHires.driver.userId.last_name.substring(0,1)}"></span>
+                                                    </span>
+
+                                        </div>
+
+                                        <!-- USER INFO -->
+                                        <div class="min-w-0">
+
+                                            <p
+                                                    class="font-semibold text-zinc-200 text-sm truncate">
+
+                                                        <span
+                                                                th:if="${upHires.hireStatus.id == 1 || upHires.hireStatus.id == 5}"
+                                                                class="text-yellow-400">
+                                                            Waiting for Driver
+                                                        </span>
+
+                                                <span
+                                                        th:if="${upHires.hireStatus.id != 1 && upHires.hireStatus.id != 5}">
+                                                            <span
+                                                                    th:text="${upHires.driver.userId.first_name}"></span>
+                                                            <span
+                                                                    th:text="${upHires.driver.userId.last_name}"></span>
+                                                        </span>
+
+                                            </p>
+
+                                            <p
+                                                    class="text-xs text-zinc-500">
+                                                Driver Assigned
+                                            </p>
+
+                                        </div>
+
+                                    </div>
+
+                                    <!-- ROUTE (Job-card style) -->
+                                    <div class="px-5 flex gap-4">
+
+                                        <div
+                                                class="flex flex-col items-center">
+                                            <div
+                                                    class="w-3 h-3 rounded-full bg-green-500"></div>
+                                            <div
+                                                    class="w-[2px] h-14 bg-zinc-700"></div>
+                                            <div
+                                                    class="w-3 h-3 rounded-full bg-red-500"></div>
+                                        </div>
+
+                                        <div class="flex-1">
+
+                                            <div class="mb-4">
+                                                <p
+                                                        class="text-[10px] uppercase text-zinc-500">Pickup</p>
+                                                <p
+                                                        class="text-sm text-zinc-200 mt-1"
+                                                        th:text="${upHires.pickup_location}"></p>
+                                            </div>
+
+                                            <div>
+                                                <p
+                                                        class="text-[10px] uppercase text-zinc-500">Destination</p>
+                                                <p
+                                                        class="text-sm text-zinc-200 font-medium mt-1"
+                                                        th:text="${upHires.drop_location}"></p>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                    <!-- GRID INFO (same as job card pattern) -->
+                                    <div
+                                            class="p-5 grid grid-cols-2 gap-3">
+
+                                        <div
+                                                class="bg-zinc-950 border border-zinc-800 rounded-2xl p-3">
+
+                                            <p
+                                                    class="text-[10px] text-zinc-500 uppercase">
+                                                Date
+                                            </p>
+
+                                            <p
+                                                    th:text="${#temporals.format(upHires.starting_at, 'dd MMM yyyy')}"
+                                                    class="text-sm font-semibold mt-1">
+                                            </p>
+
+                                        </div>
+
+                                        <div
+                                                class="bg-zinc-950 border border-zinc-800 rounded-2xl p-3">
+
+                                            <p
+                                                    class="text-[10px] text-zinc-500 uppercase">
+                                                Time
+                                            </p>
+
+                                            <p
+                                                    th:text="${#temporals.format(upHires.starting_at, 'hh:mm a')}"
+                                                    class="text-sm font-semibold mt-1">
+                                            </p>
+
+                                        </div>
+
+                                        <div
+                                                class="bg-zinc-950 border border-zinc-800 rounded-2xl p-3">
+                                            <p
+                                                    class="text-[10px] text-zinc-500 uppercase">Distance</p>
+                                            <p
+                                                    class="text-sm font-semibold mt-1 text-zinc-200">
+                                                        <span
+                                                                th:text="${upHires.distance}"></span>
+                                                km
+                                            </p>
+                                        </div>
+
+                                        <div
+                                                class="bg-zinc-950 border border-zinc-800 rounded-2xl p-3">
+                                            <p
+                                                    class="text-[10px] text-zinc-500 uppercase">Fare</p>
+                                            <p
+                                                    class="text-sm font-semibold mt-1 text-emerald-400">
+                                                LKR <span
+                                                    th:text="${upHires.total_fare}"></span>
+                                            </p>
+                                        </div>
+
+                                        <div
+                                                class="bg-zinc-950 border border-zinc-800 rounded-2xl p-3">
+                                            <p
+                                                    class="text-[10px] text-zinc-500 uppercase">Vehicle</p>
+                                            <p
+                                                    class="text-sm font-semibold mt-1 text-zinc-200"
+                                                    th:text="${upHires.vehicleType.name}">
+                                            </p>
+                                        </div>
+
+                                        <div
+                                                class="bg-zinc-950 border border-zinc-800 rounded-2xl p-3">
+
+                                            <p
+                                                    class="text-[10px] text-zinc-500 uppercase">Payment</p>
+
+                                            <p
+                                                    class="text-sm font-semibold mt-1 text-zinc-200"
+                                                    th:text="${upHires.hireStatus.id == 5 ? 'Not Paid Yet' : upHires.payment.paymentType.name}">
+                                            </p>
+
+                                        </div>
+
+                                    </div>
+
+                                    <!-- FOOTER ACTION -->
+                                    <div class="p-5">
+
+                                        <!-- CASH -->
+                                        <div
+                                                th:if="${upHires.hireStatus.id != 5
+             and upHires.payment != null
+             and upHires.payment.paymentType.id == 1}"
+                                                class="p-4 rounded-2xl border border-emerald-500/20 bg-emerald-500/5 flex items-center gap-4">
+
+                                            <!-- Icon circle (clean, no emoji) -->
+                                            <div
+                                                    class="w-10 h-10 rounded-full bg-emerald-500/10 flex items-center justify-center">
+                                                <svg
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                        class="w-5 h-5 text-emerald-400"
+                                                        viewBox="0 0 24 24"
+                                                        fill="none"
+                                                        stroke="currentColor"
+                                                        stroke-width="2">
+                                                    <path
+                                                            d="M12 1v22" />
+                                                    <path
+                                                            d="M17 5H9.5a3.5 3.5 0 0 0 0 7H14a3.5 3.5 0 0 1 0 7H6" />
+                                                </svg>
+                                            </div>
+
+                                            <!-- Text content -->
+                                            <div class="flex flex-col">
+                                                <p
+                                                        class="text-sm font-semibold text-emerald-400 tracking-wide">
+                                                    Cash Payment
+                                                    Confirmed
+                                                </p>
+                                                <p
+                                                        class="text-xs text-emerald-300/80">
+                                                    Payment will be
+                                                    collected at pickup
+                                                </p>
+                                            </div>
+
+                                        </div>
+
+                                        <!-- INVOICE -->
+                                        <button
+                                                th:if="${upHires.hireStatus.id != 5 and upHires.payment != null and upHires.payment.paymentType.id == 2}"
+                                                th:onclick="'window.location.href=\'/invoice?hireId=' + ${upHires.id} + '\''"
+                                                class="w-full mt-2 py-3 rounded-2xl
+               bg-zinc-800 hover:bg-zinc-700
+               border border-zinc-700
+               text-zinc-200 font-semibold text-sm">
+
+                                            View Invoice
+
+                                        </button>
+
+                                        <button
+                                                th:if="${upHires.hireStatus.id != 5}"
+                                                th:attr="data-id=${upHires.id}"
+                                                onclick="cancelBooking(this)"
+                                                class="w-full mt-2 flex items-center justify-center gap-2 px-4 py-3 rounded-2xl
+           bg-red-600 hover:bg-red-500 transition-all duration-200
+           text-sm font-semibold text-white">
+
+                                            <i
+                                                    class="fa-solid fa-trash"></i>
+                                            Cancel Booking
+
+                                        </button>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                    </div>
+
+                    <div id="expired-bookings"  class="booking-section mb-10 hidden">
+
+                                <div
+                                        class="flex items-center justify-between mb-5">
+
+                                    <div>
+
+                                        <h2
+                                                class="text-2xl font-bold mt-1">
+                                            Expired Bookings
+                                        </h2>
+                                    </div>
+
+                                </div><div
+                                    th:if="${#lists.isEmpty(pastHires)}"
+                                    class="relative bg-zinc-950 border border-zinc-700 rounded-3xl p-10 shadow-lg text-center max-w-md mx-auto">
+
+                                <!-- GLOW -->
+                                <div
+                                        class="absolute -top-10 -right-10 w-40 h-40 bg-blue-500/10 blur-3xl rounded-full"></div>
+
+                                <!-- ICON -->
+                                <div
+                                        class="flex justify-center mb-5">
+                                    <div
+                                            class="w-16 h-16 flex items-center justify-center rounded-2xl bg-zinc-800 border border-zinc-700">
+
+                                        <!-- Clock / Calendar Icon -->
+                                        <svg
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                class="w-8 h-8 text-zinc-400"
+                                                fill="none"
+                                                viewBox="0 0 24 24"
+                                                stroke="currentColor"
+                                                stroke-width="1.5">
+
+                                            <path
+                                                    stroke-linecap="round"
+                                                    stroke-linejoin="round"
+                                                    d="M8 7V3m8 4V3m-9 8h10m2 0v9a2 2 0 01-2 2H7a2 2 0 01-2-2v-9m14 0H5" />
+
+                                        </svg>
+
+                                    </div>
+                                </div>
+
+                                <!-- TITLE -->
+                                <p
+                                        class="text-white text-lg font-semibold">
+                                    No Upcoming Hires
+                                </p>
+
+                                <!-- DESCRIPTION -->
+                                <p
+                                        class="text-zinc-400 text-sm mt-2">
+                                    There are no bookings scheduled
+                                    for today yet.
+                                </p>
+
+                            </div>
+
+                                <div
+                                        class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+
+                                    <div th:each="pHires : ${pastHires}"
+                                         class="bg-zinc-900 border border-zinc-800 rounded-3xl overflow-hidden shadow-xl">
+
+                                        <!-- HEADER -->
+                                        <div
+                                                class="p-5 flex items-start justify-between">
+
+                                            <!-- STATUS + TIME -->
+                                            <div
+                                                    class="flex flex-col gap-1">
+
+                                                        <span
+                                                                th:text="${pHires.hireStatus.name}"
+                                                                class="px-3 py-1 rounded-full text-[10px]
+                         bg-yellow-500/10 text-yellow-400
+                         border border-yellow-500/20 uppercase w-fit">
+                                                        </span>
+
+                                                <p
+                                                        class="text-[11px] text-zinc-500"
+                                                        th:text="${#dates.format(pHires.requested_at, 'dd MMM, hh:mm a')}">
+                                                </p>
+
+                                            </div>
+
+                                            <!-- RIDE ID -->
+                                            <div class="text-right">
+                                                <p
+                                                        class="text-[10px] text-zinc-500">Ride
+                                                    ID</p>
+                                                <p
+                                                        class="text-sm font-semibold text-zinc-300">
+                                                    #<span
+                                                        th:text="${pHires.id}"></span>
+                                                </p>
+                                            </div>
+
+                                        </div>
+
+                                        <!-- USER / DRIVER SECTION -->
+                                        <div
+                                                class="p-5 flex items-center gap-3">
+
+                                            <!-- AVATAR -->
+                                            <div
+                                                    class="w-12 h-12 rounded-2xl bg-zinc-800 flex items-center justify-center font-semibold text-sm">
+
+                                                        <span
+                                                                th:if="${pHires.hireStatus.id == 1 || pHires.hireStatus.id == 5}"
+                                                                class="text-yellow-400">?</span>
+
+                                                <span
+                                                        th:if="${pHires.hireStatus.id != 1 && pHires.hireStatus.id != 5}">
+                                                            <span
+                                                                    th:text="${pHires.driver.userId.first_name.substring(0,1)}"></span>
+                                                            <span
+                                                                    th:text="${pHires.driver.userId.last_name.substring(0,1)}"></span>
+                                                        </span>
+
+                                            </div>
+
+                                            <!-- USER INFO -->
+                                            <div class="min-w-0">
+
+                                                <p
+                                                        class="font-semibold text-zinc-200 text-sm truncate">
+
+                                                            <span
+                                                                    th:if="${pHires.hireStatus.id == 1 || pHires.hireStatus.id == 5}"
+                                                                    class="text-yellow-400">
+                                                                Waiting for
+                                                                Driver
+                                                            </span>
+
+                                                    <span
+                                                            th:if="${pHires.hireStatus.id != 1 && pHires.hireStatus.id != 5}">
+                                                                <span
+                                                                        th:text="${pHires.driver.userId.first_name}"></span>
+                                                                <span
+                                                                        th:text="${pHires.driver.userId.last_name}"></span>
+                                                            </span>
+
+                                                </p>
+
+                                                <p
+                                                        class="text-xs text-zinc-500">
+                                                    Driver Assigned
+                                                </p>
+
+                                            </div>
+
+                                        </div>
+
+                                        <!-- ROUTE (Job-card style) -->
+                                        <div class="px-5 flex gap-4">
+
+                                            <div
+                                                    class="flex flex-col items-center">
+                                                <div
+                                                        class="w-3 h-3 rounded-full bg-green-500"></div>
+                                                <div
+                                                        class="w-[2px] h-14 bg-zinc-700"></div>
+                                                <div
+                                                        class="w-3 h-3 rounded-full bg-red-500"></div>
+                                            </div>
+
+                                            <div class="flex-1">
+
+                                                <div class="mb-4">
+                                                    <p
+                                                            class="text-[10px] uppercase text-zinc-500">Pickup</p>
+                                                    <p
+                                                            class="text-sm text-zinc-200 mt-1"
+                                                            th:text="${pHires.pickup_location}"></p>
+                                                </div>
+
+                                                <div>
+                                                    <p
+                                                            class="text-[10px] uppercase text-zinc-500">Destination</p>
+                                                    <p
+                                                            class="text-sm text-zinc-200 font-medium mt-1"
+                                                            th:text="${pHires.drop_location}"></p>
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                        <!-- GRID INFO (same as job card pattern) -->
+                                        <div
+                                                class="p-5 grid grid-cols-2 gap-3">
+
+                                            <div
+                                                    class="bg-zinc-950 border border-zinc-800 rounded-2xl p-3">
+
+                                                <p
+                                                        class="text-[10px] text-zinc-500 uppercase">
+                                                    Date
+                                                </p>
+
+                                                <p
+                                                        th:text="${#temporals.format(pHires.starting_at, 'dd MMM yyyy')}"
+                                                        class="text-sm font-semibold mt-1">
+                                                </p>
+
+                                            </div>
+
+                                            <div
+                                                    class="bg-zinc-950 border border-zinc-800 rounded-2xl p-3">
+
+                                                <p
+                                                        class="text-[10px] text-zinc-500 uppercase">
+                                                    Time
+                                                </p>
+
+                                                <p
+                                                        th:text="${#temporals.format(pHires.starting_at, 'hh:mm a')}"
+                                                        class="text-sm font-semibold mt-1">
+                                                </p>
+
+                                            </div>
+
+                                            <div
+                                                    class="bg-zinc-950 border border-zinc-800 rounded-2xl p-3">
+                                                <p
+                                                        class="text-[10px] text-zinc-500 uppercase">Distance</p>
+                                                <p
+                                                        class="text-sm font-semibold mt-1 text-zinc-200">
+                                                            <span
+                                                                    th:text="${pHires.distance}"></span>
+                                                    km
+                                                </p>
+                                            </div>
+
+                                            <div
+                                                    class="bg-zinc-950 border border-zinc-800 rounded-2xl p-3">
+                                                <p
+                                                        class="text-[10px] text-zinc-500 uppercase">Fare</p>
+                                                <p
+                                                        class="text-sm font-semibold mt-1 text-emerald-400">
+                                                    LKR <span
+                                                        th:text="${pHires.total_fare}"></span>
+                                                </p>
+                                            </div>
+
+                                            <div
+                                                    class="bg-zinc-950 border border-zinc-800 rounded-2xl p-3">
+                                                <p
+                                                        class="text-[10px] text-zinc-500 uppercase">Vehicle</p>
+                                                <p
+                                                        class="text-sm font-semibold mt-1 text-zinc-200"
+                                                        th:text="${pHires.vehicleType.name}">
+                                                </p>
+                                            </div>
+
+                                            <div
+                                                    class="bg-zinc-950 border border-zinc-800 rounded-2xl p-3">
+
+                                                <p
+                                                        class="text-[10px] text-zinc-500 uppercase">Payment</p>
+
+                                                <p
+                                                        class="text-sm font-semibold mt-1 text-zinc-200"
+                                                        th:text="${pHires.hireStatus.id == 5 ? 'Not Paid Yet' : pHires.payment.paymentType.name}">
+                                                </p>
+
+                                            </div>
+
+                                        </div>
+
+                                        <!-- FOOTER ACTION -->
+                                        <div class="p-5">
+
+                                            <!-- CASH -->
+                                            <div
+                                                    th:if="${pHires.hireStatus.id != 5
+             and pHires.payment != null
+             and pHires.payment.paymentType.id == 1}"
+                                                    class="p-4 rounded-2xl border border-emerald-500/20 bg-emerald-500/5 flex items-center gap-4">
+
+                                                <!-- Icon circle (clean, no emoji) -->
+                                                <div
+                                                        class="w-10 h-10 rounded-full bg-emerald-500/10 flex items-center justify-center">
+                                                    <svg
+                                                            xmlns="http://www.w3.org/2000/svg"
+                                                            class="w-5 h-5 text-emerald-400"
+                                                            viewBox="0 0 24 24"
+                                                            fill="none"
+                                                            stroke="currentColor"
+                                                            stroke-width="2">
+                                                        <path
+                                                                d="M12 1v22" />
+                                                        <path
+                                                                d="M17 5H9.5a3.5 3.5 0 0 0 0 7H14a3.5 3.5 0 0 1 0 7H6" />
+                                                    </svg>
+                                                </div>
+
+                                                <!-- Text content -->
+                                                <div
+                                                        class="flex flex-col">
+                                                    <p
+                                                            class="text-sm font-semibold text-emerald-400 tracking-wide">
+                                                        Cash Payment
+                                                        Confirmed
+                                                    </p>
+                                                    <p
+                                                            class="text-xs text-emerald-300/80">
+                                                        Payment will be
+                                                        collected at
+                                                        pickup
+                                                    </p>
+                                                </div>
+
+                                            </div>
+
+                                            <!-- INVOICE -->
+                                            <button
+                                                    th:if="${pHires.hireStatus.id != 5 and pHires.payment != null and pHires.payment.paymentType.id == 2}"
+                                                    th:onclick="'window.location.href=\'/invoice?hireId=' + ${pHires.id} + '\''"
+                                                    class="w-full mt-2 py-3 rounded-2xl
+               bg-zinc-800 hover:bg-zinc-700
+               border border-zinc-700
+               text-zinc-200 font-semibold text-sm">
+
+                                                View Invoice
+
+                                            </button>
+
+                                            <button
+                                                    th:if="${pHires.hireStatus.id == 5}"
+                                                    type="button"
+                                                    th:onclick="'payHire(' + ${pHires.id} + ')'"
+                                                    class="w-full mt-2 py-3 rounded-2xl
+               bg-yellow-400 hover:bg-yellow-500
+               text-zinc-950 font-bold text-sm
+               shadow-md hover:shadow-lg hover:shadow-yellow-400/30
+               transition-all duration-200 active:scale-[0.98]">
+
+                                                Proceed to Pay
+                                            </button>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+<script src="/Js/myBookings.js"></script>
+<script src="/Js/default.js"></script>
+</body>
+
+</html>
